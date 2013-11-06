@@ -1,15 +1,13 @@
 <!doctype html>
 <html>
 <head>
-  <%block name="css">
-    <link rel="stylesheet" href="/css/base.css" />
-  </%block>
+  <%block name="css" />
   <title><%block name="title" /></title>
 </head>
 <body>
   ${self.body()}
   <%block name="scripts">
-    <script src="/js/jquery-2.0.3.js"></script>
+    <script src="jquery-1.10.2.js"></script>
   </%block>
 </body>
 </html>
