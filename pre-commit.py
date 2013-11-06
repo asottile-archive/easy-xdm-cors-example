@@ -80,7 +80,7 @@ TESTS = [
         True, 'testtabs',
     ),
     Test(
-        "testify tests",
+        "testify tests -x really-slow",
         "Py    - Tests",
         False, 'testtests',
     ),

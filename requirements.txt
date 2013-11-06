@@ -1,0 +1,5 @@
+flask
+selenium
+testify==0.4.1
+cssselect
+coverage
