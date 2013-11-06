@@ -60,7 +60,7 @@ def catch_all(path):
 
 def is_ssl():
     parser = argparse.ArgumentParser(description="Start easy-xdm server")
-    parser.add_argument('--ssl', type=bool, required=False, default=False)
+    parser.add_argument('--ssl', action='store_true', required=False, default=False)
     args = parser.parse_args()
 
     return args.ssl
@@ -68,7 +68,7 @@ def is_ssl():
 
 if __name__ == '__main__':
     context = None
-    port = None
+    port = 5000
     if is_ssl():
         context = SSL.Context(SSL.SSLv23_METHOD)
         context.use_privatekey_file('cert/server.key')
