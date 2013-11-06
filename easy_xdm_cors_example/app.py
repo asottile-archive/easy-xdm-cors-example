@@ -10,7 +10,6 @@ APP_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 @app.route('/')
 def index():
-    return APP_ROOT
     return 'Hello World'
 
 EXTENSIONS_TO_MIMETYPES = {
