@@ -22,15 +22,23 @@ def render_template(template_name, **env):
 def index():
     return render_template('index.mako')
 
+def get_cross_origin_response():
+    response = flask.Response(
+        '{"success": true}',
+        mimetype='application/json',
+    )
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 @app.route('/post_endpoint', methods=['POST'])
 @require_secure
 def secure_post_endpoint():
-    return '{"success": true}'
+    return get_cross_origin_response()
 
 @app.route('/get_endpoint', methods=['GET'])
 @require_secure
 def secure_get_endpoint():
-    return '{"success": true}'
+    return get_cross_origin_response()
 
 EXTENSIONS_TO_MIMETYPES = {
     '.js': 'application/javascript',
