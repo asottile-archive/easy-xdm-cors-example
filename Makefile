@@ -1,21 +1,16 @@
-test:
-	rm -rf py_env
-	virtualenv py_env --system-site-packages
+test: py_env
 	bash -c 'source py_env/bin/activate && \
-		pip install -r requirements.txt --upgrade && \
 		testify tests -x selenium'
 		
-test_selenium:
+test_selenium: py_env
+	bash -c 'source py_env/bin/activate && \
+		testify tests.selenium'
+		
+py_env: requirements.txt
 	rm -rf py_env
 	virtualenv py_env --system-site-packages
 	bash -c 'source py_env/bin/activate && \
-		pip install -r requirements.txt && \
-		testify tests.selenium'
-		
-coverage:
-	virtualenv py_env --system-site-packages
-	bash -c 'source py_env/bin/activate && \
-		pip install -r requirements.txt && \
-		coverage erase && \
-		coverage run fix_coverage.py'		
-		
+		pip install -r requirements.txt'
+
+clean:
+	rm -rf py_env
