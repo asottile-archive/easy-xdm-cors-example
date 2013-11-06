@@ -1,5 +1,8 @@
+import argparse
 import flask
 import os.path
+from OpenSSL import SSL
+
 
 app = flask.Flask(__name__)
 
@@ -55,5 +58,21 @@ def catch_all(path):
     except IOError:
         flask.abort(404)
 
+def is_ssl():
+    parser = argparse.ArgumentParser(description="Start easy-xdm server")
+    parser.add_argument('--ssl', type=bool, required=False, default=False)
+    args = parser.parse_args()
+
+    return args.ssl
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    context = None
+    port = None
+    if is_ssl():
+        context = SSL.Context(SSL.SSLv23_METHOD)
+        context.use_privatekey_file('cert/server.key')
+        context.use_certificate_file('cert/server.crt')
+        port = 9001
+
+    app.run(debug=True, ssl_context=context, port=port)

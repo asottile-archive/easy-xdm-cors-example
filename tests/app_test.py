@@ -21,3 +21,10 @@ class TestCatchall(EasyXDMCORSExampleServerTestCase):
     def test_easy_xdm_js(self):
         response = self.client.get('/easyXDM.debug.js')
         assert_no_response_errors(response)
+
+class TestSSL(EasyXDMCORSExampleServerTestCase):
+
+    def test_ssl(self):
+        # TODO(struys): We should have one test for ssl connections.
+        # Seems to be really hard in flask
+        pass
