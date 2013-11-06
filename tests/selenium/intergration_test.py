@@ -35,11 +35,12 @@ def remote_web_driver(desired_capabilities):
         command_executor=command_executor_url
     )
 
-    driver.implicitly_wait(30)
+    driver.implicitly_wait(15)
 
-    yield driver
-
-    driver.quit()
+    try:
+        yield driver
+    finally:
+        driver.quit()
 
 @T.suite('really-slow')
 @T.suite('selenium')
@@ -47,8 +48,9 @@ class IntegrationTestBrowsers(T.TestCase):
 
     def test_firefox(self):
         with remote_web_driver(DesiredCapabilities.FIREFOX.copy()) as driver:
-            driver.get('http://localhost:5000')
-            T.assert_in(
-                'Hello World',
-                driver.find_element_by_tag_name('body').text
+            driver.get('http://localhost:5000/')
+            driver.find_element_by_css_selector('.cors-now').click()
+            T.assert_equal(
+                '{"success": true}',
+                driver.find_element_by_css_selector('.cors-status div').text
             )

@@ -31,7 +31,8 @@ Hello World
                    }
                },
                function (response) {
-                   $('.cors-status').text(JSON.stringify(response.data));
+                   var responseElement = $('<div>').text(response.data);
+                   $('.cors-status').empty().append(responseElement);
                }
            );
         });
