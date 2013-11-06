@@ -1,8 +1,8 @@
 import contextlib
 import os
-import testify as T
 from selenium.webdriver.remote import webdriver
 from selenium.webdriver import DesiredCapabilities
+import testify as T
 
 
 def get_command_executor_url(host, path, port=80, user=None, passwd=None):
@@ -21,7 +21,7 @@ def get_command_executor_url(host, path, port=80, user=None, passwd=None):
     return url + '{host}:{port}/{path}'.format(host=host, port=port, path=path)
 
 @contextlib.contextmanager
-def remote_web_driver(desired_capabilities):
+def remote_web_driver(desired_capabilities, implicit_wait=15):
     command_executor_url = get_command_executor_url(
         host=os.environ.get('SELENIUM_HOST', 'localhost'),
         path=os.environ.get('SELENIUM_PATH', 'wd/hub'),
@@ -32,25 +32,31 @@ def remote_web_driver(desired_capabilities):
 
     driver = webdriver.WebDriver(
         desired_capabilities=desired_capabilities,
-        command_executor=command_executor_url
+        command_executor=command_executor_url,
     )
 
-    driver.implicitly_wait(15)
+    driver.implicitly_wait(implicit_wait)
 
     try:
         yield driver
     finally:
         driver.quit()
 
-@T.suite('really-slow')
 @T.suite('selenium')
 class IntegrationTestBrowsers(T.TestCase):
 
+    def _test_cors(self, driver):
+        driver.get('http://localhost:5000/')
+        driver.find_element_by_css_selector('.cors-now').click()
+        T.assert_equal(
+            '{"success": true}',
+            driver.find_element_by_css_selector('.cors-status div').text
+        )
+
     def test_firefox(self):
-        with remote_web_driver(DesiredCapabilities.FIREFOX.copy()) as driver:
-            driver.get('http://localhost:5000/')
-            driver.find_element_by_css_selector('.cors-now').click()
-            T.assert_equal(
-                '{"success": true}',
-                driver.find_element_by_css_selector('.cors-status div').text
-            )
+        with remote_web_driver(DesiredCapabilities.FIREFOX) as driver:
+            self._test_cors(driver)
+
+    def test_chrome(self):
+        with remote_web_driver(DesiredCapabilities.CHROME) as driver:
+            self._test_cors(driver)
