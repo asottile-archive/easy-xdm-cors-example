@@ -48,12 +48,6 @@ check_python_module() {
     print_found "$cols" $?
 }
 
-check_prog g++
-check_prog make
-check_prog nm
-check_prog c++filt
-check_prog grep
-check_prog egrep
 check_prog python
 check_prog pyflakes
 check_prog ipython
@@ -62,5 +56,7 @@ check_python_module ipdb
 check_python_module testify
 check_python_module coverage
 check_python_module json
+check_python_module flask
+check_python_module mako
 
 exit $exit_ret
