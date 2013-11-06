@@ -3,6 +3,7 @@ import flask
 import os.path
 from OpenSSL import SSL
 
+from util.decorators import require_secure
 
 app = flask.Flask(__name__)
 
@@ -11,6 +12,16 @@ APP_ROOT = os.path.abspath(os.path.dirname(__file__))
 @app.route('/')
 def index():
     return 'Hello World'
+
+@app.route('/post_endpoint', methods=['POST'])
+@require_secure
+def secure_post_endpoint():
+    return '{"success": true}'
+
+@app.route('/get_endpoint', methods=['GET'])
+@require_secure
+def secure_get_endpoint():
+    return '{"success": true}'
 
 EXTENSIONS_TO_MIMETYPES = {
     '.js': 'application/javascript',
