@@ -27,7 +27,7 @@ def get_cross_origin_response():
         '{"success": true}',
         mimetype='application/json',
     )
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
     return response
 
 @app.route('/post_endpoint', methods=['POST'])
