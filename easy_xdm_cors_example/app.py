@@ -1,5 +1,6 @@
 import argparse
 import flask
+import mako.lookup
 import os.path
 from OpenSSL import SSL
 
@@ -7,11 +8,19 @@ from util.decorators import require_secure
 
 app = flask.Flask(__name__)
 
+template_lookup = mako.lookup.TemplateLookup(
+    directories=['easy_xdm_cors_example/templates'],
+)
+
 APP_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+def render_template(template_name, **env):
+    template = template_lookup.get_template(template_name)
+    return template.render(**env)
 
 @app.route('/')
 def index():
-    return 'Hello World'
+    return render_template('index.mako')
 
 @app.route('/post_endpoint', methods=['POST'])
 @require_secure
