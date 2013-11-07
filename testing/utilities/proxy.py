@@ -104,6 +104,8 @@ def proxy_server():
     proxyserver = ProxyServer()
     proxyserver.start()
 
-    yield proxyserver
-
-    proxyserver.shutdown()
+    # TODO: write a test that asserts an exception makes this thing clean up
+    try:
+        yield proxyserver
+    finally:
+        proxyserver.shutdown()

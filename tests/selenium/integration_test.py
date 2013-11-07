@@ -5,7 +5,7 @@ from selenium.webdriver import DesiredCapabilities
 import simplejson
 import testify as T
 
-from easy_xdm_cors_example.proxy import proxy_server
+from testing.utilities.proxy import proxy_server
 
 PROXY_URL = 'localhost:8080'
 
