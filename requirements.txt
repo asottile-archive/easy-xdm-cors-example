@@ -3,3 +3,6 @@ selenium
 git+https://github.com/Yelp/Testify.git@c9fd9e3808
 cssselect
 coverage
+pyquery
+simplejson
+mako
