@@ -2,8 +2,24 @@
 
 <%block name="title">Index</%block>
 
-Hello World
-
+<form>
+  <label>
+    <div>First:</div>
+    <input class="first-name">
+  </label>
+  <label>
+    <div>Last:</div>
+    <input class="last-name">
+  </label>
+  <label>
+    <div>Email:</div>
+    <input class="email">
+  </label>
+  <label>
+    <div>Phone:</div>
+    <input class="phone">
+  </label>
+</form>
 <button class="cors-now">OMG DO CORS NOW</button>
 <div class="cors-status"></div>
 
@@ -13,7 +29,16 @@ Hello World
   <script>
     $(function () {
         $('.cors-now').on('click', function () {
-            console.log('click');
+            var firstName = $('.first-name').val(),
+                lastName = $('.last-name').val(),
+                email = $('.email').val(),
+                phone = $('.phone').val();
+
+            if (!firstName || !lastName || !email || !phone) {
+                alert('Missing stuff');
+                return;
+            }
+
             var xhr = new easyXDM.Rpc(
                 {remote: 'https://${host}:9001/cors/index.html'},
                 {remote: {request: {}}}
@@ -24,10 +49,10 @@ Hello World
                     url: '/post_endpoint',
                     method: 'POST',
                     data: {
-                        firstname: 'Anthony',
-                        lastname: 'Sottile',
-                        phone: '248-888-8888',
-                        email: 'herp.derp@example.com',
+                        firstname: firstName,
+                        lastname: lastName,
+                        email: email,
+                        phone: phone,
                    }
                },
                function (response) {

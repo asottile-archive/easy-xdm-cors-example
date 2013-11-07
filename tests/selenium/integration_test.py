@@ -45,8 +45,19 @@ def remote_web_driver(desired_capabilities, implicit_wait=15):
 @T.suite('selenium')
 class IntegrationTestBrowsers(T.TestCase):
 
+    SENSITIVE_INFO = {
+        'first_name': 'Anthony',
+        'last_name': 'Sottile',
+        'phone': '555-555-5555',
+        'email': 'herp.derp@example.com',
+    }
+
     def _test_cors(self, driver):
         driver.get('http://localhost:5000/')
+        driver.find_element_by_css_selector('.first-name').send_keys(self.SENSITIVE_INFO['first_name'])
+        driver.find_element_by_css_selector('.last-name').send_keys(self.SENSITIVE_INFO['last_name'])
+        driver.find_element_by_css_selector('.email').send_keys(self.SENSITIVE_INFO['email'])
+        driver.find_element_by_css_selector('.phone').send_keys(self.SENSITIVE_INFO['phone'])
         driver.find_element_by_css_selector('.cors-now').click()
         T.assert_equal(
             '{"success": true}',
