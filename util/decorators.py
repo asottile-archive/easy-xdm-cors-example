@@ -21,7 +21,7 @@ class cached_property(object):
 _NONE_PASSED = object()
 
 def require_secure(func=_NONE_PASSED):
-    """Requires that the user is viewing from localhost.
+    """Requires that the user is viewing securely.
 
     Usage:
 
