@@ -2,6 +2,7 @@ import contextlib
 import os
 from selenium.webdriver.remote import webdriver
 from selenium.webdriver import DesiredCapabilities
+import simplejson
 import testify as T
 
 
@@ -60,8 +61,13 @@ class IntegrationTestBrowsers(T.TestCase):
         driver.find_element_by_css_selector('.phone').send_keys(self.SENSITIVE_INFO['phone'])
         driver.find_element_by_css_selector('.cors-now').click()
         T.assert_equal(
-            '{"success": true}',
-            driver.find_element_by_css_selector('.cors-status div').text
+            {
+                'original_request': self.SENSITIVE_INFO,
+                'success': True,
+            },
+            simplejson.loads(
+                driver.find_element_by_css_selector('.cors-status div').text
+            )
         )
 
     def test_firefox(self):

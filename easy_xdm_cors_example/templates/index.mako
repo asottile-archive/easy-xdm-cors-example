@@ -49,8 +49,8 @@
                     url: '/post_endpoint',
                     method: 'POST',
                     data: {
-                        firstname: firstName,
-                        lastname: lastName,
+                        first_name: firstName,
+                        last_name: lastName,
                         email: email,
                         phone: phone,
                    }

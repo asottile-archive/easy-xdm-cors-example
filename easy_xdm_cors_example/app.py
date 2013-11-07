@@ -1,8 +1,9 @@
 import argparse
 import flask
 import mako.lookup
+import OpenSSL.SSL
 import os.path
-from OpenSSL import SSL
+import simplejson
 
 from util.decorators import require_secure
 
@@ -23,9 +24,12 @@ def index():
     host = flask.request.host.split(':')[0]
     return render_template('index.mako', host=host)
 
-def get_cross_origin_response():
+def get_cross_origin_response(form={}):
     response = flask.Response(
-        '{"success": true}',
+        simplejson.dumps({
+            'original_request': form,
+            'success': True,
+        }),
         mimetype='application/json',
     )
     response.headers['Access-Control-Allow-Origin'] = 'http://' + flask.request.host.split(':')[0] + ':5000'
@@ -34,7 +38,7 @@ def get_cross_origin_response():
 @app.route('/post_endpoint', methods=['POST'])
 @require_secure
 def secure_post_endpoint():
-    return get_cross_origin_response()
+    return get_cross_origin_response(flask.request.form)
 
 @app.route('/get_endpoint', methods=['GET'])
 @require_secure
@@ -98,7 +102,7 @@ if __name__ == '__main__':
     context = None
     port = 5000
     if is_ssl():
-        context = SSL.Context(SSL.SSLv23_METHOD)
+        context = OpenSSL.SSL.Context(OpenSSL.SSL.SSLv23_METHOD)
         context.use_privatekey_file('cert/server.key')
         context.use_certificate_file('cert/server.crt')
         port = 9001
