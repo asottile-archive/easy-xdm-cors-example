@@ -41,7 +41,6 @@ class TestRequireSecure(T.TestCase):
         return mock_callable
 
     def test_ok_with_secure(self):
-        """Tests that the method is called as usual with localhost."""
         mock_request = self._get_fake_request(True)
         arg = object()
         callable = self._get_callable_mock()
