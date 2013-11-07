@@ -11,8 +11,6 @@ from miproxy.proxy import ProxyHandler
 
 class SniffingAsyncMitmProxy(MitmProxy):
     
-    _continue = True
-    
     def __init__(self, server_address=('', 8080), RequestHandlerClass=ProxyHandler, bind_and_activate=True, ca_file='ca.pem'):
         MitmProxy.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
         self.sniffable_content = ''
@@ -20,14 +18,6 @@ class SniffingAsyncMitmProxy(MitmProxy):
     def finish_request(self, request, client_address):
         proxy_handler = self.RequestHandlerClass(request, client_address, self)
         self.sniffable_content += proxy_handler.sniffable_content
-
-    def serve_until_shutdown(self):
-        while self._continue:
-            self.handle_request()
-
-    def shutdown(self):
-        self._continue = False
-        self.server_close()
 
 class SniffingProxyHandler(ProxyHandler):
     
@@ -97,35 +87,25 @@ class SniffingProxyHandler(ProxyHandler):
 class ProxyServer(object):
     
     def __init__(self):
-        self.proxy = None
-    
-    def run(self): 
         self.proxy = SniffingAsyncMitmProxy(RequestHandlerClass=SniffingProxyHandler)
-        self.server_thread = threading.Thread(target=self.proxy.serve_until_shutdown)
-        self.server_thread.daemon = True
-        self.server_thread.start()
-        # Kludge: Wait a little as it sometimes takes a while to get the server
-        # started.
-        time.sleep(0.25)
-        
+    
     @property
     def sniffable_content(self):
-        if self.proxy is None:
-            return ''
-        
         return self.proxy.sniffable_content
+    
+    def start(self):
+        self.server_thread = threading.Thread(target=self.proxy.serve_forever)
+        self.server_thread.daemon = True
+        self.server_thread.start()
         
     def shutdown(self):
-        if self.proxy is None:
-            return
         self.proxy.shutdown()
         self.server_thread.join()
-    
     
 @contextlib.contextmanager
 def proxy_server():
     proxyserver = ProxyServer()
-    proxyserver.run()
+    proxyserver.start()
     
     yield proxyserver
     
