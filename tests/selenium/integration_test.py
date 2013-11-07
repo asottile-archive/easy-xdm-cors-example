@@ -5,7 +5,7 @@ from selenium.webdriver import DesiredCapabilities
 import simplejson
 import testify as T
 
-from testing.utilities.proxy import proxy_server
+from testing.utilities.proxy import ProxyServer
 
 PROXY_URL = 'localhost:8080'
 
@@ -67,7 +67,7 @@ class IntegrationTestBrowsers(T.TestCase):
     }
 
     def _test_cors(self, driver):
-        with proxy_server() as proxy:
+        with ProxyServer.in_context() as proxy:
             driver.get('http://localhost:5000/')
             driver.find_element_by_css_selector('.first-name').send_keys(self.SENSITIVE_INFO['first_name'])
             driver.find_element_by_css_selector('.last-name').send_keys(self.SENSITIVE_INFO['last_name'])

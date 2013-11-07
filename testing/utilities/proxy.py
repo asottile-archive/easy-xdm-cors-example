@@ -1,10 +1,10 @@
-import contextlib
 import ssl
-import threading
 from httplib import HTTPResponse
 
 from miproxy.proxy import MitmProxy
 from miproxy.proxy import ProxyHandler
+
+from testing.utilities.background_context import BackgroundContext
 
 class SniffingAsyncMitmProxy(MitmProxy):
 
@@ -81,31 +81,18 @@ class SniffingProxyHandler(ProxyHandler):
         # Relay the message
         self.request.sendall(self.mitm_response(res))
 
-class ProxyServer(object):
+class ProxyServer(BackgroundContext):
 
     def __init__(self):
+        super(BackgroundContext, self).__init__()
         self.proxy = SniffingAsyncMitmProxy(RequestHandlerClass=SniffingProxyHandler)
+
+    def background_action(self):
+        self.proxy.serve_forever()
+
+    def teardown(self):
+        self.proxy.shutdown()
 
     @property
     def sniffable_content(self):
         return self.proxy.sniffable_content
-
-    def start(self):
-        self.server_thread = threading.Thread(target=self.proxy.serve_forever)
-        self.server_thread.daemon = True
-        self.server_thread.start()
-
-    def shutdown(self):
-        self.proxy.shutdown()
-        self.server_thread.join()
-
-@contextlib.contextmanager
-def proxy_server():
-    proxyserver = ProxyServer()
-    proxyserver.start()
-
-    # TODO: write a test that asserts an exception makes this thing clean up
-    try:
-        yield proxyserver
-    finally:
-        proxyserver.shutdown()
