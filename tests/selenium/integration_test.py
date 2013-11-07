@@ -4,6 +4,7 @@ from selenium.webdriver.remote import webdriver
 from selenium.webdriver import DesiredCapabilities
 import testify as T
 
+PROXY_URL = 'localhost:8080'
 
 def get_command_executor_url(host, path, port=80, user=None, passwd=None):
     """Creates a url for connecting to a selenium webdriver server."""
@@ -29,6 +30,16 @@ def remote_web_driver(desired_capabilities, implicit_wait=15):
         user=os.environ.get('SELENIUM_USER', 'nobody'),
         passwd=os.environ.get('SELENIUM_PASSWORD', 'password')
     )
+
+    desired_capabilities['proxy'] = {
+        "httpProxy":PROXY_URL,
+        "ftpProxy":PROXY_URL,
+        "sslProxy":PROXY_URL,
+        "noProxy":None,
+        "proxyType":"MANUAL",
+        "class":"org.openqa.selenium.Proxy",
+        "autodetect":False,
+    }
 
     driver = webdriver.WebDriver(
         desired_capabilities=desired_capabilities,
