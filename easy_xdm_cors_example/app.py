@@ -10,7 +10,7 @@ from util.decorators import require_secure
 app = flask.Flask(__name__)
 app.debug = True
 
-STANDARD_PORT = 5000
+HTTP_PORT = 5000
 SSL_PORT = 9001
 
 template_lookup = mako.lookup.TemplateLookup(
@@ -36,7 +36,10 @@ def get_cross_origin_response(form={}):
         }),
         mimetype='application/json',
     )
-    response.headers['Access-Control-Allow-Origin'] = 'http://' + flask.request.host.split(':')[0] + ':5000'
+    response.headers['Access-Control-Allow-Origin'] = 'http://{0}:{1}'.format(
+        flask.request.host.split(':')[0],
+        HTTP_PORT,
+    )
     return response
 
 @app.route('/post_endpoint', methods=['POST'])
@@ -98,7 +101,7 @@ def get_http_server(ssl=False):
     from werkzeug.debug import DebuggedApplication
     from werkzeug.serving import make_server
 
-    port = STANDARD_PORT
+    port = HTTP_PORT
     context = None
 
     if ssl:

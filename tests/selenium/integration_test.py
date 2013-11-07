@@ -5,6 +5,7 @@ from selenium.webdriver import DesiredCapabilities
 import simplejson
 import testify as T
 
+from easy_xdm_cors_example.app import HTTP_PORT
 from testing.utilities.proxy import ProxyServer
 from testing.utilities.web_server import WebServer
 
@@ -82,7 +83,7 @@ class IntegrationTestBrowsers(T.TestCase):
 
     def _test_cors(self, driver):
         with ProxyServer.in_context() as proxy:
-            driver.get('http://localhost:5000/')
+            driver.get('http://localhost:{0}/'.format(HTTP_PORT))
             driver.find_element_by_css_selector('.first-name').send_keys(self.SENSITIVE_INFO['first_name'])
             driver.find_element_by_css_selector('.last-name').send_keys(self.SENSITIVE_INFO['last_name'])
             driver.find_element_by_css_selector('.email').send_keys(self.SENSITIVE_INFO['email'])
