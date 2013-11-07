@@ -8,6 +8,10 @@ import simplejson
 from util.decorators import require_secure
 
 app = flask.Flask(__name__)
+app.debug = True
+
+STANDARD_PORT = 5000
+SSL_PORT = 9001
 
 template_lookup = mako.lookup.TemplateLookup(
     directories=['easy_xdm_cors_example/templates'],
@@ -90,6 +94,31 @@ def catch_all(path):
     except IOError:
         flask.abort(404)
 
+def get_http_server(ssl=False):
+    from werkzeug.debug import DebuggedApplication
+    from werkzeug.serving import make_server
+
+    port = STANDARD_PORT
+    context = None
+
+    if ssl:
+        port = SSL_PORT
+        context = OpenSSL.SSL.Context(OpenSSL.SSL.SSLv23_METHOD)
+        context.use_privatekey_file('cert/server.key')
+        context.use_certificate_file('cert/server.crt')
+
+    host = '0.0.0.0'
+    print '\nHello world from {0}://{1}:{2}'.format(
+        'https' if ssl else 'http',
+        host,
+        port,
+    )
+
+    # Give us debuger on exceptions
+    application = DebuggedApplication(app, True)
+
+    return make_server(host, port, app=application, ssl_context=context)
+
 def is_ssl():
     parser = argparse.ArgumentParser(description="Start easy-xdm server")
     parser.add_argument('--ssl', action='store_true', required=False, default=False)
@@ -97,14 +126,5 @@ def is_ssl():
 
     return args.ssl
 
-
 if __name__ == '__main__':
-    context = None
-    port = 5000
-    if is_ssl():
-        context = OpenSSL.SSL.Context(OpenSSL.SSL.SSLv23_METHOD)
-        context.use_privatekey_file('cert/server.key')
-        context.use_certificate_file('cert/server.crt')
-        port = 9001
-
-    app.run(host='0.0.0.0', debug=True, ssl_context=context, port=port)
+    get_http_server(is_ssl()).serve_forever()

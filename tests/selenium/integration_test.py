@@ -6,6 +6,7 @@ import simplejson
 import testify as T
 
 from testing.utilities.proxy import ProxyServer
+from testing.utilities.web_server import WebServer
 
 PROXY_URL = 'localhost:8080'
 
@@ -56,6 +57,14 @@ def remote_web_driver(desired_capabilities, implicit_wait=15):
     finally:
         driver.quit()
 
+@contextlib.contextmanager
+def web_servers_running():
+    with contextlib.nested(
+        WebServer.in_context(True),
+        WebServer.in_context(False),
+    ):
+        yield
+
 @T.suite('selenium')
 class IntegrationTestBrowsers(T.TestCase):
 
@@ -65,6 +74,11 @@ class IntegrationTestBrowsers(T.TestCase):
         'phone': '555-555-5555',
         'email': 'herp.derp@example.com',
     }
+
+    @T.class_setup_teardown
+    def web_servers(self):
+        with web_servers_running():
+            yield
 
     def _test_cors(self, driver):
         with ProxyServer.in_context() as proxy:
