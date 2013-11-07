@@ -15,7 +15,7 @@ Hello World
         $('.cors-now').on('click', function () {
             console.log('click');
             var xhr = new easyXDM.Rpc(
-                {remote: 'https://localhost:9001/cors/index.html'},
+                {remote: 'https://${host}:9001/cors/index.html'},
                 {remote: {request: {}}}
             );
 

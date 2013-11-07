@@ -20,14 +20,15 @@ def render_template(template_name, **env):
 
 @app.route('/')
 def index():
-    return render_template('index.mako')
+    host = flask.request.host.split(':')[0]
+    return render_template('index.mako', host=host)
 
 def get_cross_origin_response():
     response = flask.Response(
         '{"success": true}',
         mimetype='application/json',
     )
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5000'
+    response.headers['Access-Control-Allow-Origin'] = 'http://' + flask.request.host.split(':')[0] + ':5000'
     return response
 
 @app.route('/post_endpoint', methods=['POST'])
@@ -102,4 +103,4 @@ if __name__ == '__main__':
         context.use_certificate_file('cert/server.crt')
         port = 9001
 
-    app.run(debug=True, ssl_context=context, port=port)
+    app.run(host='0.0.0.0', debug=True, ssl_context=context, port=port)
