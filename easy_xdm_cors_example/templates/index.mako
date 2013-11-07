@@ -40,7 +40,7 @@
             }
 
             var xhr = new easyXDM.Rpc(
-                {remote: 'https://${host}:9001/cors/index.html'},
+                {remote: 'https://${host}:${ssl_port}/cors/index.html'},
                 {remote: {request: {}}}
             );
 

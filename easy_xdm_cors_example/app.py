@@ -26,7 +26,7 @@ def render_template(template_name, **env):
 @app.route('/')
 def index():
     host = flask.request.host.split(':')[0]
-    return render_template('index.mako', host=host)
+    return render_template('index.mako', host=host, ssl_port=SSL_PORT)
 
 def get_cross_origin_response(form={}):
     response = flask.Response(
