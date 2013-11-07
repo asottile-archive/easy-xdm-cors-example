@@ -1,8 +1,11 @@
 import contextlib
 import os
+
+import testify as T
 from selenium.webdriver.remote import webdriver
 from selenium.webdriver import DesiredCapabilities
-import testify as T
+
+from easy_xdm_cors_example.proxy import proxy_server
 
 PROXY_URL = 'localhost:8080'
 
@@ -57,12 +60,16 @@ def remote_web_driver(desired_capabilities, implicit_wait=15):
 class IntegrationTestBrowsers(T.TestCase):
 
     def _test_cors(self, driver):
-        driver.get('http://localhost:5000/')
-        driver.find_element_by_css_selector('.cors-now').click()
-        T.assert_equal(
-            '{"success": true}',
-            driver.find_element_by_css_selector('.cors-status div').text
-        )
+        with proxy_server() as proxy:
+            driver.get('http://localhost:5000/')
+            driver.find_element_by_css_selector('.cors-now').click()
+            T.assert_equal(
+                '{"success": true}',
+                driver.find_element_by_css_selector('.cors-status div').text
+            )
+            
+            T.assert_not_in('sensitive_thing', proxy.sniffable_content)
+            T.assert_in('jquery', proxy.sniffable_content)
 
     def test_firefox(self):
         with remote_web_driver(DesiredCapabilities.FIREFOX) as driver:

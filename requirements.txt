@@ -5,3 +5,5 @@ cssselect
 coverage
 pymiproxy
 proxpy
+simplejson
+mako
