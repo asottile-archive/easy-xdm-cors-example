@@ -5,6 +5,10 @@ test: py_env
 test_selenium: py_env
 	bash -c 'source py_env/bin/activate && \
 		testify tests.selenium'
+
+test_selenium_no_ie: py_env
+	bash -c 'source py_env/bin/activate && \
+		testify tests.selenium -x internet-explorer'
 		
 py_env: requirements.txt
 	rm -rf py_env

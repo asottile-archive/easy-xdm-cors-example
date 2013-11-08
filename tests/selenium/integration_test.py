@@ -87,6 +87,13 @@ def web_servers_running():
     ):
         yield
 
+def multiple_suites(*suites):
+    def _multiple_suites(func):
+        for suite in suites:
+            func = T.suite(suite)(func)
+        return func
+    return _multiple_suites
+
 @T.suite('selenium')
 class IntegrationTestBrowsers(T.TestCase):
 
@@ -140,12 +147,19 @@ class IntegrationTestBrowsers(T.TestCase):
 
         # Add a test for each of our tests
         for capabilities in self.BROWSER_SUITES:
+            browser = capabilities['browserName'].replace(' ', '-')
+            version = capabilities.get('version', 'ANY').replace(' ', '-')
+            platform = capabilities.get('platform', 'ANY').replace(' ', '-')
             test_name = 'test_{0}_{1}_{2}'.format(
-                capabilities['browserName'].replace(' ', '-'),
-                capabilities.get('version', 'anyversion').replace(' ', '-'),
-                capabilities.get('platform', 'anyplatform').replace(' ', '-'),
+                browser, version, platform,
             )
             test = functools.partial(self._test_cors.im_func, capabilities=capabilities)
             test.__name__ = test_name
+            # Give it suites for the browser
+            test = multiple_suites(
+                browser,
+                '_'.join([browser, version]),
+                '_'.join([browser, version, platform]),
+            )(test)
             test = types.MethodType(test, self, type(self))
             setattr(self, test_name, test)
