@@ -1,15 +1,12 @@
 
-from easy_xdm_cors_example.app import get_http_server
-from testing.utilities.background_context import BackgroundContext
+from testing.utilities.background_context import SubprocessBackgroundContext
 
-class WebServer(BackgroundContext):
+class WebServer(SubprocessBackgroundContext):
 
     def __init__(self, is_ssl):
         super(WebServer, self).__init__()
-        self.server = get_http_server(is_ssl)
-
-    def background_action(self):
-        self.server.serve_forever()
-
-    def teardown(self):
-        self.server.shutdown()
+        self.command = [
+            'python', '-m', 'easy_xdm_cors_example.app',
+        ]
+        if is_ssl:
+            self.command.append('--ssl')

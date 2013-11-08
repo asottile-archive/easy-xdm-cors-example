@@ -1,5 +1,6 @@
 
 import contextlib
+import subprocess
 import threading
 
 class BackgroundContext(object):
@@ -28,3 +29,15 @@ class BackgroundContext(object):
             yield instance
         finally:
             instance.stop()
+
+class SubprocessBackgroundContext(BackgroundContext):
+
+    command = None
+
+    def start(self):
+        self.process = subprocess.Popen(self.command)
+
+    def stop(self):
+        # TODO(asottile): should use some sort of timeout here
+        self.process.terminate()
+        self.process.wait()

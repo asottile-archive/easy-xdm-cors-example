@@ -25,7 +25,7 @@
 
 <%block name="scripts">
   ${parent.scripts()}
-  <script src="/easyXDM.debug.js"></script>
+  <script src="/easyXDM.js"></script>
   <script>
     $(function () {
         $('.cors-now').on('click', function () {
