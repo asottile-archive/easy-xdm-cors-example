@@ -10,3 +10,9 @@ class WebServer(SubprocessBackgroundContext):
         ]
         if is_ssl:
             self.command.append('--ssl')
+
+    @property
+    def extended_env(self):
+        env = super(WebServer, self).extended_env
+        env['PYTHONPATH'] = '.'
+        return env

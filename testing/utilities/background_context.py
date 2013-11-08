@@ -1,5 +1,6 @@
 
 import contextlib
+import os
 import subprocess
 import threading
 
@@ -34,8 +35,12 @@ class SubprocessBackgroundContext(BackgroundContext):
 
     command = None
 
+    @property
+    def extended_env(self):
+        return os.environ.copy()
+
     def start(self):
-        self.process = subprocess.Popen(self.command)
+        self.process = subprocess.Popen(self.command, env=self.extended_env)
 
     def stop(self):
         # TODO(asottile): should use some sort of timeout here
