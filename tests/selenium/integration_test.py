@@ -11,7 +11,7 @@ from easy_xdm_cors_example.app import HTTP_PORT
 from testing.utilities.proxy import ProxyServer
 from testing.utilities.web_server import WebServer
 
-PROXY_URL = 'localhost:8080'
+PROXY_URL = 'asottile.dyndns.org:8080'
 
 IE_VERSION_TO_OS = {
     '8': 'Windows XP',
@@ -121,7 +121,7 @@ class IntegrationTestBrowsers(T.TestCase):
     def _test_cors(self, capabilities):
         with remote_webdriver(capabilities) as driver:
             with ProxyServer.in_context() as proxy:
-                driver.get('http://localhost:{0}/'.format(HTTP_PORT))
+                driver.get('http://asottile.dyndns.org:{0}/'.format(HTTP_PORT))
                 driver.find_element_by_css_selector('.first-name').send_keys(self.SENSITIVE_INFO['first_name'])
                 driver.find_element_by_css_selector('.last-name').send_keys(self.SENSITIVE_INFO['last_name'])
                 driver.find_element_by_css_selector('.email').send_keys(self.SENSITIVE_INFO['email'])
