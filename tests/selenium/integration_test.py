@@ -111,7 +111,7 @@ class IntegrationTestBrowsers(T.TestCase):
         with web_servers_running():
             yield
 
-    def test_cors(self, capabilities):
+    def _test_cors(self, capabilities):
         with remote_webdriver(capabilities) as driver:
             with ProxyServer.in_context() as proxy:
                 driver.get('http://localhost:{0}/'.format(HTTP_PORT))
@@ -145,7 +145,7 @@ class IntegrationTestBrowsers(T.TestCase):
                 capabilities.get('version', 'anyversion').replace(' ', '-'),
                 capabilities.get('platform', 'anyplatform').replace(' ', '-'),
             )
-            test = functools.partial(self.test_cors.im_func, capabilities=capabilities)
+            test = functools.partial(self._test_cors.im_func, capabilities=capabilities)
             test.__name__ = test_name
             test = types.MethodType(test, self, type(self))
             setattr(self, test_name, test)
