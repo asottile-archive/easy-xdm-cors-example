@@ -11,7 +11,7 @@ app = flask.Flask(__name__)
 app.debug = True
 
 HTTP_PORT = 5000
-SSL_PORT = 9001
+SSL_PORT = 443
 
 template_lookup = mako.lookup.TemplateLookup(
     directories=['easy_xdm_cors_example/templates'],
