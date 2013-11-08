@@ -107,6 +107,7 @@ class IntegrationTestBrowsers(T.TestCase):
     BROWSER_SUITES = [
         DesiredCapabilities.FIREFOX.copy(),
         DesiredCapabilities.CHROME.copy(),
+        DesiredCapabilities.OPERA.copy(),
         get_ie_capabilities('8'),
         get_ie_capabilities('9'),
         get_ie_capabilities('10'),
