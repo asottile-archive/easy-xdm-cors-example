@@ -8,7 +8,6 @@ import simplejson
 from util.decorators import require_secure
 
 app = flask.Flask(__name__)
-app.debug = True
 
 HTTP_PORT = 5000
 SSL_PORT = 9001
@@ -114,4 +113,4 @@ if __name__ == '__main__':
         context.use_privatekey_file('cert/server.key')
         context.use_certificate_file('cert/server.crt')
 
-    app.run('0.0.0.0', port, debug=True, ssl_context=context)
+    app.run('0.0.0.0', port, debug=True, use_reloader=False, ssl_context=context)
