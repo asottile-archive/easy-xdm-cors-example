@@ -1,6 +1,6 @@
 flask
 selenium
-git+https://github.com/Yelp/Testify.git@c9fd9e3808
+testify==0.5.1
 cssselect
 coverage
 pyquery
