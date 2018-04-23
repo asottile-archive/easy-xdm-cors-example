@@ -1,9 +1,9 @@
 import contextlib
 import functools
+import json
 import os
 from selenium.webdriver.remote import webdriver
 from selenium.webdriver import DesiredCapabilities
-import simplejson
 import testify as T
 import types
 
@@ -132,7 +132,7 @@ class IntegrationTestBrowsers(T.TestCase):
                         'original_request': self.SENSITIVE_INFO,
                         'success': True,
                     },
-                    simplejson.loads(
+                    json.loads(
                         driver.find_element_by_css_selector('.cors-status div').text
                     )
                 )

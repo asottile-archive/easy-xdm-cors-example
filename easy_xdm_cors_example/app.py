@@ -1,9 +1,9 @@
 import argparse
+import json
 import flask
 import mako.lookup
 import OpenSSL.SSL
 import os.path
-import simplejson
 
 from util.decorators import require_secure
 
@@ -29,7 +29,7 @@ def index():
 
 def get_cross_origin_response(form={}):
     response = flask.Response(
-        simplejson.dumps({
+        json.dumps({
             'original_request': form,
             'success': True,
         }),

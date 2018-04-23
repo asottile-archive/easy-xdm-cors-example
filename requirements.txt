@@ -5,5 +5,4 @@ cssselect
 coverage
 pyquery
 pymiproxy
-simplejson
 mako

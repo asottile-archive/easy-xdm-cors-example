@@ -1,6 +1,6 @@
+import json
 
 import pyquery
-import simplejson
 
 from util.decorators import cached_property
 
@@ -16,4 +16,4 @@ class TestingResponse(object):
 
     @cached_property
     def json(self):
-        return simplejson.loads(self.response.data)
+        return json.loads(self.response.data)
