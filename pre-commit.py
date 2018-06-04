@@ -60,9 +60,9 @@ TESTS = [
         False, 'testpyflakes',
     ),
     Test(
-        "%s | xargs grep 'import\sipdb'" % PY_FILES,
-        'Py    - ipdb',
-        True, 'testipdb',
+        "%s | xargs grep 'import\spdb'" % PY_FILES,
+        'Py    - pdb',
+        True, 'testpdb',
     ),
     Test(
         "%s | grep 'tests' | grep -v '_test.py$' | grep -v '__init__.py'" % PY_FILES,

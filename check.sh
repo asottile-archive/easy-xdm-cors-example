@@ -50,12 +50,9 @@ check_python_module() {
 
 check_prog python
 check_prog pyflakes
-check_prog ipython
 check_prog pip
-check_python_module ipdb
 check_python_module testify
 check_python_module coverage
-check_python_module json
 check_python_module flask
 check_python_module mako
 
